@@ -1,0 +1,28 @@
+{
+  "name": "CCNA 200-301 v2.0 Study Course",
+  "short_name": "CCNA Study",
+  "description": "Lessons, flash cards, practice tests and cheat sheet for Cisco CCNA 200-301 v2.0.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0c0b10",
+  "theme_color": "#0c0b10",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

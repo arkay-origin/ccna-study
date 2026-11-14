@@ -1,0 +1,792 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0c0b10"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ENSLD Study"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ENSLD 300-420 Study Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Saira:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one centred study column — deck controls on top, a single card, grade buttons pinned under it. Black field, tan type, red reserved for "review again" and the active marker. */
+:root{
+  /* Palette taken from the slide deck: blue-black ground, pale khaki wordmark, brass-gold tagline, orange-red badge field, multicam olive */
+  --bg:#0c0b10; --panel:#15141b; --line:#2a2833;
+  --tan:#d9d7b0; --tan-dim:#bfa152; --ink:#ebe8dc; --muted:#8d8a7c;
+  --red:#d9561f; --red-soft:#33190f; --ok:#8f9d4c;
+  --display:"Saira Condensed","Arial Narrow",Arial,sans-serif;
+  --label:"Saira","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:16px;line-height:1.5;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 84px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px}
+h1{font-family:var(--display);font-weight:700;font-size:2.3rem;letter-spacing:.03em;text-transform:uppercase;color:var(--tan);margin:0;line-height:1;text-wrap:balance}
+h1 span{color:var(--red)}
+.tally{font-family:var(--mono);font-size:.8rem;color:var(--muted);display:flex;gap:14px;font-variant-numeric:tabular-nums}
+.tally b{color:var(--ink);font-weight:500}
+.tally .k b{color:var(--ok)} .tally .r b{color:var(--red)}
+.label{font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.28em;font-size:.72rem;color:var(--tan-dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .82rem var(--body);background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:5px 9px;cursor:pointer}
+.chip[aria-pressed="true"]{color:var(--bg);background:var(--tan);border-color:var(--tan)}
+.chip:hover{border-color:var(--tan-dim)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{font:500 .82rem var(--body);background:transparent;color:var(--muted);border:0;padding:6px 10px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--tan)}
+.tool{font:500 .82rem var(--body);background:transparent;color:var(--tan);border:1px solid var(--line);border-radius:3px;padding:6px 10px;cursor:pointer}
+.tool:hover{border-color:var(--tan-dim)}
+.tool.danger{color:var(--muted)}
+.bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--tan);width:0;transition:width .3s}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--tan);border-radius:4px;padding:22px 22px 20px;min-height:280px;display:flex;flex-direction:column;gap:14px;cursor:pointer;outline:none}
+.card:focus-visible{box-shadow:0 0 0 2px var(--tan)}
+.card.flipped{border-top-color:var(--red)}
+.meta{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.meta .st-r{color:var(--red)} .meta .st-k{color:var(--ok)}
+.q{font-size:1.2rem;font-weight:500;line-height:1.4;color:var(--ink);text-wrap:pretty;margin:0}
+.hint{margin-top:auto;font-size:.82rem;color:var(--muted)}
+.ans{display:flex;flex-direction:column;gap:12px;border-top:1px dashed var(--line);padding-top:14px}
+.ans ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.ans li{padding-left:16px;position:relative;font-weight:600;color:var(--tan)}
+.ans li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;background:var(--red)}
+.why,.note{margin:0;font-size:.93rem;color:var(--ink);max-width:65ch}
+.why b,.note b{font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:.68rem;color:var(--tan-dim);margin-right:6px}
+.note{background:var(--red-soft);border-left:2px solid var(--red);padding:8px 10px;border-radius:2px}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grade button{font:700 1.05rem var(--display);text-transform:uppercase;letter-spacing:.08em;padding:12px;border-radius:3px;cursor:pointer;border:1px solid}
+.again{background:transparent;color:var(--red);border-color:var(--red)}
+.again:hover{background:var(--red-soft)}
+.got{background:var(--tan);color:var(--bg);border-color:var(--tan)}
+.got:hover{filter:brightness(1.08)}
+.grade button:disabled{opacity:.35;cursor:default}
+.nav{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;color:var(--muted)}
+.nav button{background:none;border:0;color:var(--tan-dim);font:500 .82rem var(--body);cursor:pointer;padding:4px 0}
+.done{text-align:center;padding:40px 10px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.done h2{font-family:var(--display);text-transform:uppercase;color:var(--tan);margin:0;font-size:1.6rem}
+.done p{margin:0;color:var(--muted)}
+.keys{font-size:.75rem;color:var(--muted);text-align:center}
+.keys kbd{font-family:var(--mono);border:1px solid var(--line);border-radius:2px;padding:0 4px;color:var(--tan-dim)}
+
+.views{display:flex;border:1px solid var(--tan-dim);border-radius:3px;overflow:hidden}
+.views button{font:700 .95rem var(--display);text-transform:uppercase;letter-spacing:.1em;background:transparent;color:var(--tan);border:0;padding:8px 14px;cursor:pointer}
+.views button+button{border-left:1px solid var(--tan-dim)}
+.views button[aria-pressed="true"]{background:var(--tan);color:var(--bg)}
+.search{width:100%;font:400 .95rem var(--body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:9px 11px}
+.search:focus{outline:2px solid var(--tan);outline-offset:0;border-color:var(--tan)}
+.search::placeholder{color:var(--muted)}
+.gsec{display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.gsec h2{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:1.45rem;color:var(--tan);margin:18px 0 0;padding-bottom:6px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:10px;text-wrap:balance}
+.gsec h2 small{font:500 .75rem var(--mono);color:var(--muted);letter-spacing:0;white-space:nowrap}
+.cheat{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--tan-dim);border-radius:3px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:.92rem}
+.cheat b{font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:.68rem;color:var(--tan-dim);margin-right:6px}
+.tblwrap{overflow-x:auto}
+.cheat table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.cheat th,.cheat td{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line)}
+.cheat th{color:var(--tan-dim);font-weight:600}
+.gq{display:flex;flex-direction:column;gap:10px;padding:16px 0;border-bottom:1px solid var(--line)}
+.gq:last-child{border-bottom:0}
+.gq h3{margin:0;font-size:1.05rem;font-weight:500;line-height:1.45;color:var(--ink);display:flex;gap:10px}
+.gq h3 .n{font:500 .8rem var(--mono);color:var(--red);padding-top:3px;flex:none;min-width:2.2em}
+.gq .ans{border-top:0;padding-top:0;padding-left:calc(2.2em + 10px)}
+.empty{color:var(--muted);text-align:center;padding:30px 0}
+.top{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));font:600 .8rem var(--body);background:var(--panel);color:var(--tan);border:1px solid var(--line);border-radius:3px;padding:8px 10px;cursor:pointer}
+@media (max-width:480px){.gq .ans{padding-left:0}}
+.dia{background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:10px 8px;overflow-x:auto}
+.dia svg{display:block;width:100%;min-width:300px;height:auto;max-height:420px}
+.d-box{fill:none;stroke:var(--line);stroke-width:1.2}.d-boxa{fill:var(--panel)}
+.d-rt{fill:var(--panel);stroke:var(--tan);stroke-width:1.4}.d-x{stroke:var(--tan);stroke-width:1.2;fill:none}
+.d-ln{stroke:var(--tan-dim);stroke-width:1.4;fill:none}.d-dash{stroke-dasharray:4 3}.d-red{stroke:var(--red)}
+.d-arh{fill:var(--red)}.d-redt{fill:var(--red)}
+.d-t{fill:var(--ink);font:500 10px var(--body)}.d-s{fill:var(--muted);font:400 9px var(--body)}
+.d-h{fill:var(--tan-dim);font:500 9px var(--label);letter-spacing:.16em}
+.d-cloud{fill:var(--panel);stroke:var(--muted);stroke-width:1}
+.d-sep{stroke:var(--line);stroke-width:1}
+.d-tun{fill:var(--tan-dim);fill-opacity:.35;stroke:var(--tan-dim)}
+.d-fw{fill:var(--panel);stroke:var(--red);stroke-width:1.4}
+.d-blk{fill:none;stroke:var(--red);stroke-width:2}.d-blkl{stroke:var(--red);stroke-width:2}
+.test{border-top:1px solid var(--line);padding-top:10px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}.test p{margin:0}.test b{font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:.66rem;color:var(--tan-dim)}
+.book{font-size:.88rem;display:flex;flex-direction:column;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:3px;padding:12px 14px}
+.book .lbl{font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:.66rem;color:var(--tan-dim)}
+.book ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;color:var(--ink)}
+.book ul li::marker{color:var(--red)}
+.book .rl{display:flex;flex-direction:column;gap:3px;font:500 .78rem var(--mono);color:var(--muted)}
+.ref{margin:0;font:500 .74rem var(--mono);color:var(--muted)}
+.ref b{font-family:var(--label);font-weight:500;letter-spacing:.18em;text-transform:uppercase;font-size:.62rem;color:var(--tan-dim);margin-right:6px}
+.srcnote{margin:0;font-size:.82rem;color:var(--muted)}
+.chip.bk{border-style:dashed}
+.srctag{display:inline-block;vertical-align:middle;margin-left:6px;font:500 .62rem var(--label);letter-spacing:.16em;text-transform:uppercase;color:var(--tan-dim);border:1px solid var(--line);border-radius:2px;padding:1px 5px}
+
+.mgrp{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.secnav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.hit{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink);font:500 .97rem/1.45 var(--body);cursor:pointer}
+.hit .n{font:500 .8rem var(--mono);color:var(--red);padding-top:3px;flex:none;min-width:2.2em}
+.hit .hans{display:block;font-weight:600;color:var(--tan);font-size:.88rem;margin-top:3px}
+.fold{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--tan-dim);border-radius:3px;padding:0 14px;font-size:.92rem}
+.fold.bk{border-left-color:var(--red)}
+.fold>summary{cursor:pointer;list-style:none;padding:11px 0;font-family:var(--label);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:.72rem;color:var(--tan-dim)}
+.fold>summary::-webkit-details-marker,.gq>summary::-webkit-details-marker{display:none}
+.fold>summary::after{content:" +";color:var(--muted)}.fold[open]>summary::after{content:" –"}
+.fold[open]{padding-bottom:14px;display:flex;flex-direction:column;gap:10px}
+details.gq>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+details.gq .tapr{padding-left:calc(2.2em + 10px);font-size:.8rem;color:var(--muted)}
+details.gq[open] .tapr{display:none}
+details.gq[open]>summary{margin-bottom:10px}
+details.gq.flash{background:var(--red-soft);transition:background .4s}
+button:focus-visible{outline:2px solid var(--tan);outline-offset:2px}
+@media (max-width:480px){h1{font-size:1.6rem}.q{font-size:1.08rem}.card{padding:18px 16px}.keys{display:none}}
+/* ----- practice test ----- */
+.tpanel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.tpanel h2{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:1.3rem;color:var(--tan);margin:0}
+.tsub{margin:0;font-size:.85rem;color:var(--muted)}
+.weak{display:flex;flex-direction:column}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) 3.2em;gap:4px 10px;align-items:center;padding:8px 0;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;width:100%}
+.wrow:last-child{border-bottom:0}
+.wrow .nm{font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wrow .pc{font:500 .8rem var(--mono);text-align:right;color:var(--tan);font-variant-numeric:tabular-nums}
+.wrow .pc.lo{color:var(--red)}
+.wrow .wb{grid-column:1/-1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.wrow .wb i{display:block;height:100%;background:var(--tan)}
+.wrow .wb i.lo{background:var(--red)}
+.wrow .dt{grid-column:1/-1;font:500 .7rem var(--mono);color:var(--muted)}
+button.wrow:hover .nm{color:var(--tan)}
+.go{font:700 1.05rem var(--display);text-transform:uppercase;letter-spacing:.08em;padding:12px 16px;border-radius:3px;cursor:pointer;background:var(--tan);color:var(--bg);border:1px solid var(--tan)}
+.go:disabled{opacity:.35;cursor:default}
+.go.alt{background:transparent;color:var(--tan)}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px}
+.btnrow>*{flex:1 1 140px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;font:400 .97rem/1.45 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:10px 12px;cursor:pointer}
+.opt .bx{flex:none;width:18px;height:18px;margin-top:2px;border:1.5px solid var(--muted);display:grid;place-items:center;font:600 .7rem var(--mono);color:var(--bg)}
+.opt.radio .bx{border-radius:50%}
+.opt[aria-pressed="true"]{border-color:var(--tan)}
+.opt[aria-pressed="true"] .bx{background:var(--tan);border-color:var(--tan)}
+.opt.ok{border-color:var(--ok);background:rgba(143,157,76,.12)}
+.opt.ok .bx{background:var(--ok);border-color:var(--ok)}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt.bad .bx{background:var(--red);border-color:var(--red)}
+.opt:disabled{cursor:default;color:var(--ink)}
+.pick{margin:0;font:500 .72rem var(--label);letter-spacing:.2em;text-transform:uppercase;color:var(--tan-dim)}
+.verdict{font:700 1.2rem var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0}
+.verdict.ok{color:var(--ok)}.verdict.bad{color:var(--red)}
+.score{font:700 3.2rem var(--display);color:var(--tan);line-height:1;margin:0}
+.miss{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.miss:last-child{border-bottom:0}
+.miss .mq{font-weight:500;margin:0}
+.miss .yp{margin:0;color:var(--red);font-size:.86rem}
+.miss ul{margin:0;padding-left:16px;color:var(--tan);font-weight:600}
+@media (max-width:480px){.views button{padding:8px 9px;font-size:.86rem;letter-spacing:.06em}}
+.cfold>summary{display:flex;align-items:baseline;gap:10px;font-size:.78rem;letter-spacing:.14em;color:var(--tan)}
+.cfold>summary::after{margin-left:auto}
+.cfold .cn{font:500 .75rem var(--mono);color:var(--red);letter-spacing:0}
+.cfold .cc{font:500 .68rem var(--mono);color:var(--muted);letter-spacing:0;text-transform:none;white-space:nowrap}
+.terms{margin:0;display:flex;flex-direction:column}
+.terms>div{display:grid;grid-template-columns:minmax(7.5em,32%) 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.terms dt{font-weight:600;color:var(--tan);font-size:.9rem}
+.terms dd{margin:0;font-size:.92rem;color:var(--ink)}
+.clist{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:2px;font-family:var(--mono);font-size:.82rem}
+.ctip{margin:4px 0 0;padding:10px 12px;background:var(--red-soft);border-left:3px solid var(--red);font-size:.9rem}
+.ctip b{display:block;font:500 .66rem var(--label);text-transform:uppercase;letter-spacing:.22em;color:var(--red);margin-bottom:3px}
+.cq{display:flex;flex-direction:column;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.cq .mq{margin:0;font-weight:500}
+@media (max-width:480px){.terms>div{grid-template-columns:1fr;gap:2px}}
+.views{display:grid;grid-template-columns:repeat(4,auto)}
+.views button+button{border-left:1px solid var(--tan-dim)}
+@media (max-width:560px){.views{grid-template-columns:1fr 1fr;width:100%}.views button:nth-child(3){border-left:0}.views button:nth-child(n+3){border-top:1px solid var(--tan-dim)}}
+.seg{flex-wrap:wrap}
+.star{background:none;border:0;padding:0 2px;margin-left:6px;font-size:1.05rem;line-height:1;color:var(--muted);cursor:pointer;vertical-align:baseline}
+.star[aria-pressed="true"]{color:var(--red)}
+.star:hover{color:var(--tan)}
+.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:8px}
+.foot .btnrow>*{flex:1 1 160px}
+.sumq{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--line);font-size:.92rem}
+.sumq .mq{margin:0;font-weight:500}
+.sumq ul{margin:0;padding-left:16px;color:var(--tan);font-weight:600}
+.trend{display:flex;align-items:flex-end;gap:6px;height:90px;padding-top:6px}
+.trend i{flex:1;max-width:36px;background:var(--tan-dim);border-radius:2px 2px 0 0;position:relative}
+.trend i.lo{background:var(--red)}
+.trend i span{position:absolute;top:-16px;left:0;right:0;text-align:center;font:500 .66rem var(--mono);color:var(--muted)}
+.ltabs{display:flex;border:1px solid var(--tan-dim);border-radius:3px;overflow:hidden}
+.ltabs button{flex:1;font:600 .9rem var(--display);text-transform:uppercase;letter-spacing:.08em;padding:9px 10px;background:none;color:var(--tan);border:0;cursor:pointer}
+.ltabs button+button{border-left:1px solid var(--tan-dim)}
+.ltabs button[aria-pressed="true"]{background:var(--tan);color:var(--bg)}
+.lsn{display:flex;flex-direction:column;gap:14px;overflow-wrap:anywhere;min-width:0}
+.lsn h2{margin:0}
+.lsn .lmeta{font:500 .72rem var(--mono);color:var(--muted)}
+.lsn h3.lh{margin:0;font:700 1.35rem/1.2 var(--display);color:var(--ink);text-transform:none;letter-spacing:.01em}
+.lsn p.lp{margin:0;font-size:1rem;line-height:1.6}
+.lsn ul.lu{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;line-height:1.55}
+.lsn ul.lu li::marker{color:var(--red)}
+.ltbl{overflow-x:auto;border:1px solid var(--line);border-radius:3px}
+.ltbl table{border-collapse:collapse;width:100%;font-size:.88rem}
+.ltbl th{text-align:left;font:500 .66rem var(--label);text-transform:uppercase;letter-spacing:.16em;color:var(--tan-dim);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--panel)}
+.ltbl td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.ltbl tr:last-child td{border-bottom:0}
+.ltbl td:first-child{color:var(--tan);font-weight:600;overflow-wrap:anywhere;min-width:5.5em}
+.ltbl td{overflow-wrap:anywhere}
+.lcheck{border:1px solid var(--line);border-left:3px solid var(--tan);border-radius:3px;padding:4px 14px 8px;background:var(--panel)}
+.lcheck>.label{display:block;padding:8px 0 2px}
+.lcheck details.gq{border-top:1px solid var(--line);padding:10px 0}
+.lprog{height:3px;background:var(--line);border-radius:2px;overflow:hidden}.lprog i{display:block;height:100%;background:var(--red)}
+.ltoc ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.ltoc button{background:none;border:0;padding:2px 0;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.ltoc button.cur{color:var(--tan);font-weight:600}.ltoc li.done::marker{color:var(--ok)}
+.lver ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:.88rem}
+.lver .pg{font:500 .74rem var(--mono);color:var(--tan-dim);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style><style>body{margin:0}img{max-width:100%}</style></head><body>
+
+<div class="wrap">
+  <header>
+    <div><h1>Network <span>/</span> Design</h1><div class="label" style="margin-top:6px">Cisco ENSLD 300-420 · Designing Cisco Enterprise Networks</div></div>
+    <div class="views" role="group" aria-label="View">
+      <button type="button" id="v-guide" data-v="guide">Study guide</button>
+      <button type="button" id="v-cards" data-v="cards">Flash cards</button>
+      <button type="button" id="v-test" data-v="test">Practice test</button>
+      <button type="button" id="v-cheat" data-v="cheat">Cheat sheet</button>
+    </div>
+  </header>
+
+  <section id="guideView" class="wrap" style="gap:12px">
+    <input class="search" id="q" type="search" placeholder="Search all sections" autocomplete="off">
+    <div id="guide"></div>
+  </section>
+
+  <section id="cardsView" class="wrap" hidden>
+  <div class="tally" id="tally"></div>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div class="row"><span class="label">Sections</span><button class="tool" id="allBtn" type="button">Select all</button></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="row">
+    <div class="seg" role="group" aria-label="Which cards">
+      <button type="button" id="m-all" data-mode="all">All cards</button>
+      <button type="button" id="m-new" data-mode="new">Not mastered</button>
+      <button type="button" id="m-rev" data-mode="rev">Review pile</button>
+      <button type="button" id="m-due" data-mode="due">Due today</button>
+      <button type="button" id="m-star" data-mode="star">Bookmarked</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="tool" id="shuffleBtn" type="button">Shuffle</button>
+      <button class="tool danger" id="resetBtn" type="button">Reset progress</button>
+    </div>
+  </div>
+
+  <div class="bar"><i id="bar"></i></div>
+
+  <div id="stage"></div>
+
+  <p class="keys"><kbd>Space</kbd> flip &nbsp; <kbd>1</kbd> review again &nbsp; <kbd>2</kbd> got it &nbsp; <kbd>←</kbd><kbd>→</kbd> move</p>
+  </section>
+
+  <section id="testView" class="wrap" hidden></section>
+
+  <section id="cheatView" class="wrap" hidden></section>
+</div>
+<div class="wrap foot" style="margin:0 auto"><div class="tpanel" style="background:none;border:0;padding:0"><span class="label">Your progress</span>
+  <p class="tsub">Progress is saved in this browser only. Back it up to a file to move it to another device or keep it safe if you clear your browser.</p>
+  <div class="btnrow"><button type="button" class="go alt" id="bkSave">Back up progress</button><button type="button" class="go alt" id="bkLoad">Restore from file</button></div>
+  <input type="file" id="bkFile" accept="application/json,.json" hidden><p class="tsub" id="bkMsg" aria-live="polite"></p></div></div>
+<button type="button" class="top" id="toTop" hidden>Top ↑</button>
+
+<script>
+const DATA = __DATA__;
+const SHORT = {"EIGRP Design":"EIGRP","OSPF Design":"OSPF","IS-IS Routing":"IS-IS","BGP Routing":"BGP Routing","BGP Attributes, Communities and Path Selection":"BGP Attributes","Designing Enterprise Campus LAN":"Campus LAN","Layer 2 Campus":"Layer 2 Campus","Designing Layer 3 Campus":"Layer 3 Campus","Discovering the Cisco SD-Access Architecture":"SD-Access Arch","Exploring Cisco SD-Access Fabric Design":"SD-Access Fabric","Exploring Cisco SD-Access Site Design Strategy and Considerations":"SD-Access Sites","Discovering Service Provider-Managed VPNs":"SP VPNs","Designing WAN Resiliency":"WAN Resiliency","Designing Enterprise-Managed VPNs":"Enterprise VPNs","Examining Cisco SD-WAN Architectures":"SD-WAN Arch","Examining Cisco SD-WAN Deployment Design Considerations":"SD-WAN Deploy","Examining Cisco SD-WAN NAT and Hybrid Design Considerations":"SD-WAN NAT/Hybrid","Designing Cisco SD-WAN Routing and High Availability":"SD-WAN Routing/HA","Exploring QoS":"QoS","Designing LAN and WAN QoS":"LAN/WAN QoS","Introducing Multicast":"Multicast","Exploring Multicast with PIM-SM":"PIM-SM","Designing Rendezvous Point Distribution Solutions":"RP Distribution","Designing an IPv4 Address Plan":"IPv4 Plan","Exploring IPv6":"IPv6","Deploying IPv6":"Deploy IPv6","Introducing Network APIs and Protocols":"APIs","Exploring YANG, NETCONF, RESTCONF and Model-Driven Telemetry":"YANG & MDT"};
+const refTxt=r=>`${esc(r.ch)} · ${esc(r.t)} · <span style="white-space:nowrap">PDF p. ${r.p}</span>`;
+const CARDS=[];DATA.forEach((s,si)=>s.qs.forEach((c,qi)=>!c.dup&&CARDS.push({...c,sec:s.name,id:s.name+'#'+(qi+1)+'#'+c.q.slice(0,40),num:qi+1})));
+const KEY='ndfc-v1';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let S=load();
+S.marks=S.marks||{};S.stars=S.stars||{};S.sr=S.sr||{};var DAY=86400000,SRINT=[0,1,3,7,14,30,60];S.known=S.known||(S.secs?S.secs.slice():[]);S.secs=S.secs||DATA.map(s=>s.name);S.mode=S.mode||'all';
+DATA.forEach(s=>{if(!S.known.includes(s.name)){S.known.push(s.name);if(!S.secs.includes(s.name))S.secs.push(s.name)}});
+let queue=[],pos=0,flipped=false,shuffled=S.shuffled||false;
+
+const $=id=>document.getElementById(id);
+function esc(t){return t.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+
+function build(){
+  let list=CARDS.filter(c=>S.secs.includes(c.sec));
+  if(S.mode==='new')list=list.filter(c=>S.marks[c.id]!=='k');
+  if(S.mode==='rev')list=list.filter(c=>S.marks[c.id]==='r');
+  if(S.mode==='due'){list=list.filter(c=>srDue(c));list.sort((a,b)=>((S.sr[a.id]||{}).due||0)-((S.sr[b.id]||{}).due||0))}
+  if(S.mode==='star')list=list.filter(c=>S.stars[c.id]);
+  if(shuffled){for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}}
+  queue=list;pos=0;flipped=false;render();
+}
+function chips(){
+  $('chips').innerHTML=DATA.map(s=>`<button type="button" class="chip${s.book?' bk':''}" aria-pressed="${S.secs.includes(s.name)}" data-s="${esc(s.name)}">${esc(SHORT[s.name]||s.name)} <span style="opacity:.6">${s.qs.length}</span></button>`).join('');
+  $('allBtn').textContent=S.secs.length===DATA.length?'Clear all':'Select all';
+  ['all','new','rev','due','star'].forEach(m=>$('m-'+m).setAttribute('aria-pressed',S.mode===m));
+  $('shuffleBtn').textContent=shuffled?'In order':'Shuffle';
+}
+function tally(){
+  const sel=CARDS.filter(c=>S.secs.includes(c.sec));
+  const k=sel.filter(c=>S.marks[c.id]==='k').length,r=sel.filter(c=>S.marks[c.id]==='r').length;
+  $('tally').innerHTML=`<span><b>${sel.length}</b> cards</span><span class="k"><b>${k}</b> mastered</span><span class="r"><b>${r}</b> to review</span><span><b>${sel.filter(c=>srDue(c)).length}</b> due</span><span><b>${sel.filter(c=>S.stars[c.id]).length}</b> ★</span>`;
+  $('bar').style.width=(sel.length?k/sel.length*100:0)+'%';
+}
+function render(){
+  chips();tally();
+  const st=$('stage');
+  if(!S.secs.length){st.innerHTML=`<div class="card done" style="cursor:default"><h2>No sections picked</h2><p>Choose at least one section above to start.</p></div>`;return}
+  if(pos>=queue.length){
+    const msg=queue.length?'You went through every card in this set.':(S.mode==='rev'?'Nothing in the review pile for these sections.':S.mode==='due'?'Nothing due right now. Cards you mark "Got it" come back after 1, 3, 7, 14, 30, then 60 days.':S.mode==='star'?'No bookmarked cards in these sections. Tap ☆ on a card to bookmark it.':'Every card in these sections is mastered.');
+    st.innerHTML=`<div class="card done" style="cursor:default"><h2>${queue.length?'Deck complete':'All clear'}</h2><p>${msg}</p><button class="tool" id="again" type="button">Start this set again</button></div>`;
+    $('again').onclick=build;return;
+  }
+  const c=queue[pos],m=S.marks[c.id];
+  const nx=srNext(c),status=m==='k'?`<span class="st-k">Mastered${nx?' · '+nx:''}</span>`:m==='r'?'<span class="st-r">Reviewing</span>':'<span>New</span>';
+  st.innerHTML=`
+  <div class="card${flipped?' flipped':''}" id="card" tabindex="0" role="button" aria-label="${flipped?'Hide answer':'Show answer'}">
+    <div class="meta"><span>${esc(SHORT[c.sec]||c.sec)} · Q${c.num}${c.src?' · '+esc(c.src):''}</span><span>${pos+1} / ${queue.length} · ${status}${starBtn(c.id)}</span></div>
+    <p class="q">${esc(c.card||c.q)}</p>
+    ${c.dia?`<div class="dia">${c.dia}</div>`:''}
+    ${flipped?`<div class="ans"><ul>${(c.ca||c.a).map(a=>`<li>${esc(a)}</li>`).join('')}</ul>
+      ${c.why?`<p class="why"><b>Why</b>${esc(c.why)}</p>`:''}
+      ${c.note?`<p class="note"><b>Wording note</b>${esc(c.note)}</p>`:''}${c.ref?`<p class="ref"><b>Cert Guide</b>${refTxt(c.ref)}</p>`:''}${c.card?`<div class="test"><b>On the test</b><p>${esc(c.q)}</p>${c.ca?`<p>Pick: ${c.a.map(esc).join(' / ')}</p>`:''}</div>`:''}</div>`
+    :`<p class="hint">Tap the card to show the answer</p>`}
+  </div>
+  <div class="grade" style="margin-top:10px">
+    <button type="button" class="again" id="gAgain" ${flipped?'':'disabled'}>Review again</button>
+    <button type="button" class="got" id="gGot" ${flipped?'':'disabled'}>Got it</button>
+  </div>
+  <div class="nav" style="margin-top:6px"><button type="button" id="prev" ${pos?'':'disabled'}>← Previous</button><button type="button" id="skip">Skip →</button></div>`;
+  $('card').onclick=flip;
+  $('card').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();flip()}};
+  $('gAgain').onclick=()=>grade('r');$('gGot').onclick=()=>grade('k');
+  $('prev').onclick=()=>{if(pos>0){pos--;flipped=false;render()}};
+  $('skip').onclick=()=>{pos++;flipped=false;render()};
+}
+function flip(){flipped=!flipped;render()}
+function grade(g){
+  if(!flipped)return;
+  const c=queue[pos];S.marks[c.id]=g;srGrade(c,g);save();
+  if(g==='r'){const at=Math.min(queue.length,pos+4);queue.splice(at,0,c)}
+  pos++;flipped=false;render();
+}
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;const n=b.dataset.s;S.secs=S.secs.includes(n)?S.secs.filter(x=>x!==n):[...S.secs,n];save();build()};
+$('allBtn').onclick=()=>{S.secs=S.secs.length===DATA.length?[]:DATA.map(s=>s.name);save();build()};
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{S.mode=b.dataset.mode;save();build()});
+$('shuffleBtn').onclick=()=>{shuffled=!shuffled;S.shuffled=shuffled;save();build()};
+let armed=false;
+$('resetBtn').onclick=()=>{
+  if(!armed){armed=true;$('resetBtn').textContent='Tap again to confirm';$('resetBtn').style.color='var(--red)';setTimeout(()=>{armed=false;$('resetBtn').textContent='Reset progress';$('resetBtn').style.color=''},3000);return}
+  armed=false;S.marks={};S.sr={};save();$('resetBtn').textContent='Reset progress';$('resetBtn').style.color='';build();
+};
+document.addEventListener('keydown',e=>{
+  if(S.view!=='cards')return;
+  if(e.target.closest&&e.target.closest('button:not(#card)')&&e.key===' ')return;
+  if(e.key===' '){e.preventDefault();if(pos<queue.length)flip()}
+  else if(e.key==='1')grade('r');else if(e.key==='2')grade('k');
+  else if(e.key==='ArrowRight'&&pos<queue.length){pos++;flipped=false;render()}
+  else if(e.key==='ArrowLeft'&&pos>0){pos--;flipped=false;render()}
+});
+build();
+
+// ----- view switch + study guide -----
+S.view=S.view||'guide';
+function setView(v){S.view=v;save();$('guideView').hidden=v!=='guide';$('cardsView').hidden=v!=='cards';$('testView').hidden=v!=='test';$('cheatView').hidden=v!=='cheat';
+  ['guide','cards','test','cheat'].forEach(x=>$('v-'+x).setAttribute('aria-pressed',v===x));if(v==='test')tRender();if(v==='guide')renderGuide();if(v==='cheat')renderCheat();
+  $('toTop').hidden=!(v==='guide'||v==='cheat')||scrollY<600;window.scrollTo(0,0)}
+$('v-guide').onclick=()=>setView('guide');$('v-cards').onclick=()=>setView('cards');$('v-test').onclick=()=>setView('test');$('v-cheat').onclick=()=>setView('cheat');
+$('toTop').onclick=()=>goTo(0);
+addEventListener('scroll',()=>{$('toTop').hidden=!(S.view==='guide'||S.view==='cheat')||scrollY<600},{passive:true});
+function goTo(y){y=Math.max(0,Math.round(y));const se=document.scrollingElement||document.documentElement;
+  try{window.scrollTo(0,y)}catch(e){}se.scrollTop=y;document.body.scrollTop=y}
+function jumpTo(id){const el=document.getElementById(id);if(!el)return;
+  const y=el.getBoundingClientRect().top+(window.pageYOffset||document.documentElement.scrollTop||0)-8;goTo(y);
+  setTimeout(()=>{const r=el.getBoundingClientRect().top;if(Math.abs(r-8)>40){try{el.scrollIntoView(true)}catch(e){}}},80)}
+const GROUPS=[["Addressing",["Designing an IPv4 Address Plan","Exploring IPv6","Deploying IPv6"]],
+ ["Routing",["OSPF Design","IS-IS Routing","EIGRP Design","BGP Routing","BGP Attributes, Communities and Path Selection"]],
+ ["Campus",["Designing Enterprise Campus LAN","Layer 2 Campus","Designing Layer 3 Campus"]],
+ ["SD-Access",["Discovering the Cisco SD-Access Architecture","Exploring Cisco SD-Access Fabric Design","Exploring Cisco SD-Access Site Design Strategy and Considerations"]],
+ ["WAN and VPN",["Discovering Service Provider-Managed VPNs","Designing Enterprise-Managed VPNs","Designing WAN Resiliency"]],
+ ["SD-WAN",["Examining Cisco SD-WAN Architectures","Examining Cisco SD-WAN Deployment Design Considerations","Examining Cisco SD-WAN NAT and Hybrid Design Considerations","Designing Cisco SD-WAN Routing and High Availability"]],
+ ["QoS",["Exploring QoS","Designing LAN and WAN QoS"]],
+ ["Multicast",["Introducing Multicast","Exploring Multicast with PIM-SM","Designing Rendezvous Point Distribution Solutions"]],
+ ["Automation",["Introducing Network APIs and Protocols","Exploring YANG, NETCONF, RESTCONF and Model-Driven Telemetry"]]];
+{const named=new Set(GROUPS.flatMap(g=>g[1]));const rest=DATA.map(s=>s.name).filter(n=>!named.has(n));if(rest.length)GROUPS.push(["Other",rest])}
+const SECBY={};DATA.forEach((s,i)=>SECBY[s.name]=i);
+let gExpand=false;
+function hl(t,q){const s=esc(t);if(!q)return s;const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return s.replace(re,'<mark style="background:var(--red-soft);color:var(--tan)">$1</mark>')}
+function intro(s){if(!s.intro||!s.intro.length)return'';const rows=s.intro.filter(x=>x.row),paras=s.intro.filter(x=>x.label);
+  return `<div class="cheat" style="border:0;padding:0;background:none">${paras.map(p=>`<div><b>${esc(p.label)}</b>${esc(p.text)}</div>`).join('')}${rows.length?`<div class="tblwrap"><table><thead><tr>${rows[0].row.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r=>`<tr>${r.row.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}</div>`}
+function bookPanel(s){if(!s.refs||!s.refs.length)return'';
+  return `${s.notes&&s.notes.length?`<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px">${s.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}<div class="lbl" style="font-family:var(--label);text-transform:uppercase;letter-spacing:.22em;font-size:.66rem;color:var(--tan-dim)">Read in the Cert Guide</div><div class="rl" style="display:flex;flex-direction:column;gap:3px;font:500 .78rem var(--mono);color:var(--muted)">${s.refs.map(r=>`<span>${refTxt(r)}</span>`).join('')}</div>`}
+function qBody(c,q){return `<div class="ans"><ul>${c.a.map(a=>`<li>${hl(a,q)}</li>`).join('')}</ul>
+  ${c.why?`<p class="why"><b>Why</b>${hl(c.why,q)}</p>`:''}${c.note?`<p class="note"><b>Wording note</b>${hl(c.note,q)}</p>`:''}
+  ${c.dup?`<p class="why" style="color:var(--muted);font-size:.85rem">This question also appears in the Summary Challenge with the same answer.</p>`:''}${c.ref?`<p class="ref"><b>Cert Guide</b>${refTxt(c.ref)}</p>`:''}</div>`}
+function pctOf(name){try{const w=secStats(name);return w.seen?w.pct:null}catch(e){return null}}
+
+function renderGuide(){
+  const q=$('q').value.trim(),ql=q.toLowerCase(),g=$('guide');
+  if(ql){ // search results across all sections
+    let total=0;
+    const html=DATA.map((s,si)=>{const hits=s.qs.map((c,i)=>({c,i})).filter(({c})=>[c.q,...c.a,c.why,c.note].join(' ').toLowerCase().includes(ql));
+      if(!hits.length)return'';total+=hits.length;
+      return `<div class="gsec"><h2>${esc(SHORT[s.name]||s.name)}<small>${hits.length} match${hits.length>1?'es':''}</small></h2>${hits.map(({c,i})=>`<button type="button" class="hit" data-s="${si}" data-i="${i}"><span class="n">Q${i+1}</span><span>${hl(c.q,q)}<span class="hans">${hl(c.a.join(' · '),q)}</span></span></button>`).join('')}</div>`}).join('');
+    g.innerHTML=total?`<p class="tsub">${total} questions match. Tap one to open it in its section.</p>${html}`:`<p class="empty">No questions match "${esc(q)}".</p>`;
+    g.querySelectorAll('.hit').forEach(b=>b.onclick=()=>{const si=+b.dataset.s,i=+b.dataset.i;$('q').value='';openSec(DATA[si].name,i)});
+    return;
+  }
+  if(S.gsec==='__star'){const L=CARDS.filter(c=>S.stars[c.id]);
+    g.innerHTML=`<div class="secnav"><button type="button" class="tool" id="gBack">← All sections</button></div><div class="gsec"><h2>Bookmarked<small>${L.length} Q</small></h2>${L.length?L.map((c,i)=>`<details class="gq"><summary><h3><span class="n">${esc(SHORT[c.sec]||c.sec)} Q${c.num}</span><span>${esc(c.q)}${starBtn(c.id)}</span></h3>${c.dia?`<div class="dia">${c.dia}</div>`:''}<span class="tapr">Show answer</span></summary>${qBody(c,'')}</details>`).join(''):'<p class="tsub">Nothing bookmarked yet. Tap ☆ next to any question.</p>'}</div>`;
+    $('gBack').onclick=()=>{S.gsec=null;save();renderGuide();goTo(0)};return}
+  const cur=S.gsec&&SECBY[S.gsec]!==undefined?S.gsec:null;
+  if(!cur){ // menu
+    const nst=starCount();
+    g.innerHTML=`<p class="tsub">${CARDS.length} questions in ${DATA.length} sections. Pick a section to study, or search above.</p>`+(nst?`<div class="mgrp"><div class="weak"><button type="button" class="wrow" id="gStar"><span class="nm">★ Bookmarked questions</span><span class="pc">${nst}</span></button></div></div>`:'')+GROUPS.map(([gn,names])=>`<div class="mgrp"><div class="label">${esc(gn)}</div><div class="weak">${names.filter(n=>SECBY[n]!==undefined).map(n=>{const s=DATA[SECBY[n]],p=pctOf(n),lo=p!==null&&p<60;
+      return `<button type="button" class="wrow" data-n="${esc(n)}"><span class="nm" style="white-space:normal">${esc(n)}</span><span class="pc${lo?' lo':''}">${p===null?`<span style="color:var(--muted)">${LESSONS[n]?"Lesson · ":""}${s.qs.length} Q</span>`:p+'%'}</span>${p===null?'':`<span class="wb"><i class="${lo?'lo':''}" style="width:${p}%"></i></span><span class="dt">${LESSONS[n]?"Lesson · ":""}${s.qs.length} questions</span>`}</button>`}).join('')}</div></div>`).join('');
+    g.querySelectorAll('.wrow[data-n]').forEach(b=>b.onclick=()=>openSec(b.dataset.n));
+    if($('gStar'))$('gStar').onclick=()=>{S.gsec='__star';save();renderGuide();goTo(0)};
+    return;
+  }
+  if(LESSONS[cur]&&S.gtab[cur]!=='qs')return renderLesson(cur);
+  const si=SECBY[cur],s=DATA[si],prev=DATA[si-1],next=DATA[si+1],p=pctOf(cur);
+  g.innerHTML=`
+  <div class="secnav"><button type="button" class="tool" id="gBack">← All sections</button><button type="button" class="tool" id="gExp">${gExpand?'Collapse all':'Expand all'}</button></div>
+  ${lessonTabs(cur)}
+  <div class="gsec"><h2>${esc(s.name)}<small>${s.qs.length} Q${p!==null?' · '+p+'% known':''}</small></h2>
+  ${s.intro&&s.intro.length?`<details class="fold"><summary>Cheat sheet</summary>${intro(s)}</details>`:''}
+  ${s.refs&&s.refs.length?`<details class="fold bk"><summary>Cert Guide notes</summary>${bookPanel(s)}</details>`:''}
+  <div>${s.qs.map((c,i)=>`<details class="gq" id="gq-${i}"${gExpand?' open':''}><summary><h3><span class="n">Q${i+1}</span><span>${esc(c.q)}${c.src?` <span class="srctag">${esc(c.src)}</span>`:''}${c.dup?'':starBtn(cid(s.name,i,c.q))}</span></h3>${c.dia?`<div class="dia">${c.dia}</div>`:''}<span class="tapr">Show answer</span></summary>${qBody(c,'')}</details>`).join('')}</div></div>
+  <div class="secnav">${prev?`<button type="button" class="tool" id="gPrev">← ${esc(SHORT[prev.name]||prev.name)}</button>`:'<span></span>'}${next?`<button type="button" class="tool" id="gNext">${esc(SHORT[next.name]||next.name)} →</button>`:''}</div>`;
+  g.querySelectorAll('.ltab').forEach(b=>b.onclick=()=>{S.gtab[cur]=b.dataset.t;save();renderGuide();goTo(0)});
+  $('gBack').onclick=()=>{S.gsec=null;save();renderGuide();goTo(0)};
+  $('gExp').onclick=()=>{gExpand=!gExpand;g.querySelectorAll('details.gq').forEach(d=>d.open=gExpand);$('gExp').textContent=gExpand?'Collapse all':'Expand all'};
+  if(prev)$('gPrev').onclick=()=>openSec(prev.name);if(next)$('gNext').onclick=()=>openSec(next.name);
+}
+function openSec(name,qi){S.gsec=name;save();renderGuide();
+  if(qi===undefined){goTo(0);return}
+  const el=$('gq-'+qi);if(el){el.open=true;jumpTo('gq-'+qi);el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1600)}}
+$('q').oninput=renderGuide;
+
+// ----- practice test + weak areas (own storage, never touches flash-card marks) -----
+const TKEY='ndfc-test-v1';
+function tLoad(){try{return JSON.parse(localStorage.getItem(TKEY))||{}}catch(e){return {}}}
+function tSave(){try{localStorage.setItem(TKEY,JSON.stringify(T))}catch(e){}}
+let T=tLoad();T.hist=T.hist||{};T.cfg=T.cfg||{};
+T.cfg.secs=T.cfg.secs||DATA.map(s=>s.name);T.cfg.count=T.cfg.count||25;T.cfg.fb=T.cfg.fb||'instant';
+const POOL=CARDS.filter(c=>c.mc);
+const BYID={};POOL.forEach(c=>BYID[c.id]=c);
+const EXAM=__EXAM__,DOMS=['Routing','Campus','WAN','Network Services','Automation'],MOCKMIN=90;
+EXAM.forEach(e=>{BYID['mock#'+e.n]={id:'mock#'+e.n,sec:e.dom,num:e.n,q:e.q,a:e.c.map(k=>e.o[k]),why:e.why,note:'',src:'Mock exam',mc:{o:e.o,c:e.c},mock:true}});
+T.mocks=T.mocks||[];
+if(T.cur&&T.cur.qs.some(x=>!BYID[x.id]))T.cur=null;
+let tTick=null;
+function fmtT(ms){ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);return m+':'+String(s).padStart(2,'0')}
+let tArmed=false;
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const NUMW=['','one','two','three','four','five','six'];
+
+function secStats(name){
+  const cs=CARDS.filter(c=>c.sec===name);let ok=0,seen=0,tested=0,tOk=0;
+  cs.forEach(c=>{const h=T.hist[c.id];
+    if(h){seen++;tested++;if(h.last)ok++,tOk++}
+    else if(S.marks[c.id]){seen++;if(S.marks[c.id]==='k')ok++}});
+  return {name,total:cs.length,ok,seen,tested,tOk,pct:cs.length?Math.round(ok/cs.length*100):0};
+}
+function weakList(){return DATA.map(s=>secStats(s.name)).sort((a,b)=>(!a.seen)-(!b.seen)||a.pct-b.pct||a.seen-b.seen)}
+
+function tStart(ids,fb,mock){
+  if(!ids.length)return;
+  T.showRes=false;
+  T.cur={fb,i:0,done:false,mock:!!mock,started:Date.now(),deadline:mock?Date.now()+MOCKMIN*60000:null,qs:ids.map(id=>{const c=BYID[id];
+    return c.mc.order?{id,o:shuf(c.a.map((_,k)=>k)),sel:[],res:null}:{id,o:shuf(c.mc.o.map((_,k)=>k)),sel:[],res:null}})};
+  tSave();tRender();goTo(0);
+}
+function tPickIds(secs,count){let p=shuf(POOL.filter(c=>secs.includes(c.sec)).map(c=>c.id));return count==='all'?p:p.slice(0,count)}
+
+function tEnd(){ // finish a run; unanswered questions count as wrong in a mock
+  const r=T.cur;if(!r||r.done)return;
+  if(r.mock){r.qs.forEach(x=>{if(x.res===null)x.res=false});
+    const by={};r.qs.forEach(x=>{const d=BYID[x.id].sec;by[d]=by[d]||[0,0];by[d][1]++;if(x.res)by[d][0]++});
+    T.mocks.push({at:Date.now(),ok:r.qs.filter(x=>x.res).length,n:r.qs.length,used:Math.min(Date.now(),r.deadline)-r.started,by})}
+  else r.qs=r.qs.filter(q=>q.res!==null);
+  r.done=true;T.showRes=!!r.qs.length;if(!r.qs.length)T.cur=null;tSave();tRender();goTo(0);
+}
+function tRenderX(){}
+function tRender(){
+  const v=$('testView');if(tTick){clearInterval(tTick);tTick=null}
+  if(T.cur&&!T.cur.done)return tQuestion(v);
+  if(T.view==='sum')return tSummary(v);
+  if(T.cur&&T.cur.done&&T.showRes)return tResults(v);
+  return tSetup(v);
+}
+
+function tSetup(v){
+  const W=weakList(),cfg=T.cfg;
+  const avail=POOL.filter(c=>cfg.secs.includes(c.sec)).length;
+  const anySeen=W.some(w=>w.seen);
+  const M=T.mocks,last=M[M.length-1],best=M.length?Math.max(...M.map(m=>Math.round(m.ok/m.n*100))):null;
+  v.innerHTML=`
+  <div class="tpanel">
+    <h2>Mock exam</h2>
+    <p class="tsub">The instructor's 50-question practice exam, weighted like the real one (Routing 13, Campus 12, WAN 10, Network Services 10, Automation 5). ${MOCKMIN} minutes, marked at the end. Options are shuffled each time.</p>
+    ${last?`<p class="tsub" style="color:var(--ink)">Last: <b style="color:var(--tan)">${Math.round(last.ok/last.n*100)}%</b> (${last.ok}/${last.n}, ${fmtT(last.used)}) · Best: <b style="color:var(--tan)">${best}%</b> · ${M.length} attempt${M.length>1?'s':''}</p>
+    <div class="weak">${DOMS.filter(d=>last.by[d]).map(d=>{const [c,n]=last.by[d],p=Math.round(c/n*100),lo=p<60;return `<div class="wrow" style="cursor:default"><span class="nm">${d}</span><span class="pc${lo?' lo':''}">${p}%</span><span class="wb"><i class="${lo?'lo':''}" style="width:${p}%"></i></span><span class="dt">${c} of ${n} right on your last attempt</span></div>`}).join('')}</div>`:''}
+    <div class="btnrow"><button type="button" class="go" id="tMock">Start mock exam</button></div>
+  </div>
+  <div class="tpanel">
+    <h2>Weak areas</h2>
+    <p class="tsub">Weakest sections first, then ones you haven't started. Each question counts as known from your latest practice-test answer, or your flash-card mark if you haven't tested it yet. Tap a section to test just that one.</p>
+    <div class="weak">${W.map(w=>{const lo=w.seen&&w.pct<60;return `<button type="button" class="wrow" data-sec="${esc(w.name)}">
+      <span class="nm">${esc(SHORT[w.name]||w.name)}</span><span class="pc${lo?' lo':''}">${w.seen?w.pct+'%':'<span style="color:var(--muted)">new</span>'}</span>
+      ${w.seen?`<span class="wb"><i class="${lo?'lo':''}" style="width:${w.pct}%"></i></span>
+      <span class="dt">${w.ok} of ${w.total} known · ${w.tested} tested${w.tested?` (${Math.round(w.tOk/w.tested*100)}% right)`:''}</span>`:''}</button>`}).join('')}</div>
+    <div class="btnrow"><button type="button" class="go alt" id="tWeak">Drill weakest 3</button><button type="button" class="go alt" id="tSum">Test-day summary</button>${starCount()?`<button type="button" class="go alt" id="tStar">Test bookmarked (${CARDS.filter(c=>S.stars[c.id]&&c.mc).length})</button>`:''}</div>
+  </div>
+  <div class="tpanel">
+    <h2>New test</h2>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="row"><span class="label">Sections</span><button class="tool" id="tAll" type="button">${cfg.secs.length===DATA.length?'Clear all':'Select all'}</button></div>
+      <div class="chips" id="tChips">${DATA.map(s=>`<button type="button" class="chip" aria-pressed="${cfg.secs.includes(s.name)}" data-s="${esc(s.name)}">${esc(SHORT[s.name]||s.name)}</button>`).join('')}</div>
+    </div>
+    <div class="row">
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="label">Questions</span>
+        <div class="seg" id="tCount">${[10,25,50,'all'].map(n=>`<button type="button" data-n="${n}" aria-pressed="${cfg.count===n}">${n==='all'?'All':n}</button>`).join('')}</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="label">Feedback</span>
+        <div class="seg" id="tFb"><button type="button" data-f="instant" aria-pressed="${cfg.fb==='instant'}">After each</button><button type="button" data-f="exam" aria-pressed="${cfg.fb==='exam'}">Exam style</button></div></div>
+    </div>
+    <p class="tsub">${avail} questions in the chosen sections. ${cfg.fb==='exam'?'Answers are marked at the end.':'You see the answer and the Why after each question.'} Multi-answer questions only count if every pick is right.</p>
+    <div class="btnrow"><button type="button" class="go" id="tGo" ${avail?'':'disabled'}>Start test</button>
+    ${T.cur&&T.cur.done?`<button type="button" class="go alt" id="tLast">Last results</button>`:''}</div>
+    <div class="row" style="justify-content:flex-end"><button class="tool danger" id="tReset" type="button">Reset test history</button></div>
+  </div>`;
+  $('tChips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;const n=b.dataset.s;cfg.secs=cfg.secs.includes(n)?cfg.secs.filter(x=>x!==n):[...cfg.secs,n];tSave();tSetup(v)};
+  $('tAll').onclick=()=>{cfg.secs=cfg.secs.length===DATA.length?[]:DATA.map(s=>s.name);tSave();tSetup(v)};
+  $('tCount').onclick=e=>{const b=e.target.closest('button');if(!b)return;cfg.count=b.dataset.n==='all'?'all':+b.dataset.n;tSave();tSetup(v)};
+  $('tFb').onclick=e=>{const b=e.target.closest('button');if(!b)return;cfg.fb=b.dataset.f;tSave();tSetup(v)};
+  $('tGo').onclick=()=>tStart(tPickIds(cfg.secs,cfg.count),cfg.fb);
+  $('tSum').onclick=()=>{T.view='sum';tRender();goTo(0)};
+  if($('tStar'))$('tStar').onclick=()=>tStart(shuf(CARDS.filter(c=>S.stars[c.id]&&c.mc).map(c=>c.id)),cfg.fb);
+  $('tMock').onclick=()=>tStart(EXAM.map(e=>'mock#'+e.n),'exam',true);
+  if($('tLast'))$('tLast').onclick=()=>{T.showRes=true;tSave();tRender();goTo(0)};
+  v.querySelectorAll('.wrow').forEach(b=>b.onclick=()=>tStart(tPickIds([b.dataset.sec],cfg.count),cfg.fb));
+  $('tWeak').onclick=()=>{const ws=(anySeen?W.filter(w=>w.seen):W).slice(0,3).map(w=>w.name);tStart(tPickIds(ws,cfg.count),cfg.fb)};
+  $('tReset').onclick=()=>{
+    if(!tArmed){tArmed=true;$('tReset').textContent='Tap again to confirm';$('tReset').style.color='var(--red)';setTimeout(()=>{tArmed=false;if($('tReset')){$('tReset').textContent='Reset test history';$('tReset').style.color=''}},3000);return}
+    tArmed=false;T.hist={};T.mocks=[];T.cur=null;T.showRes=false;tSave();tSetup(v)};
+}
+
+function isRight(c,x){
+  if(c.mc.order)return x.sel.length===c.a.length&&x.sel.every((k,i)=>k===i);
+  const want=c.mc.c.slice().sort().join(),got=x.sel.slice().sort().join();return want===got;
+}
+function tSubmit(){
+  const r=T.cur,x=r.qs[r.i],c=BYID[x.id];if(x.res!==null)return;
+  x.res=isRight(c,x);
+  if(!c.mock){const h=T.hist[c.id]||{n:0,c:0};h.n++;if(x.res)h.c++;h.last=x.res?1:0;T.hist[c.id]=h}
+  if(r.fb==='exam')tNext();else{tSave();tRender()}
+}
+function tNext(){const r=T.cur;r.i++;if(r.i>=r.qs.length){r.i=r.qs.length-1;return tEnd()}tSave();tRender();goTo(0)}
+
+function tQuestion(v){
+  const r=T.cur,x=r.qs[r.i],c=BYID[x.id],shown=x.res!==null&&r.fb==='instant';
+  const need=c.mc.order?c.a.length:c.mc.c.length,multi=!c.mc.order&&need>1;
+  let body;
+  if(c.mc.order){
+    body=`<p class="pick">Tap the steps in order</p><div class="opts">${x.o.map(k=>{const p=x.sel.indexOf(k);
+      const cls=shown?(p===k?' ok':' bad'):'';
+      return `<button type="button" class="opt${cls}" data-k="${k}" aria-pressed="${p>=0}" ${shown?'disabled':''}><span class="bx">${p>=0?p+1:''}</span><span>${esc(c.a[k].replace(/^\d+\.\s*/,''))}</span></button>`}).join('')}</div>`;
+  }else{
+    body=`<p class="pick">${multi?'Pick '+NUMW[need]:'Pick one'}</p><div class="opts">${x.o.map(k=>{const on=x.sel.includes(k),cor=c.mc.c.includes(k);
+      const cls=shown?(cor?' ok':on?' bad':''):'';
+      return `<button type="button" class="opt${multi?'':' radio'}${cls}" data-k="${k}" aria-pressed="${on}" ${shown?'disabled':''}><span class="bx">${shown&&cor?'✓':''}</span><span>${esc(c.mc.o[k])}</span></button>`}).join('')}</div>`;
+  }
+  const ready=x.sel.length===need;
+  v.innerHTML=`
+  <div class="tally"><span><b>${r.i+1}</b> of ${r.qs.length}</span><span>${r.mock?`Mock exam · <b id="tClock">${fmtT(r.deadline-Date.now())}</b> left`:r.fb==='exam'?'Exam style':'Feedback after each'}</span></div>
+  <div class="bar"><i style="width:${r.i/r.qs.length*100}%"></i></div>
+  <div class="card" style="cursor:default;min-height:0">
+    <div class="meta"><span>${esc(SHORT[c.sec]||c.sec)} · Q${c.num}${c.src&&!r.mock?' · '+esc(c.src):''}</span>${c.mock?'':starBtn(c.id)}</div>
+    <p class="q">${esc(c.q)}</p>
+    ${c.dia?`<div class="dia">${c.dia}</div>`:''}
+    ${body}
+    ${shown?`<div class="ans"><p class="verdict ${x.res?'ok':'bad'}">${x.res?'Correct':'Not quite'}</p>
+      ${c.mc.order?`<ul>${c.a.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`:''}
+      ${c.why?`<p class="why"><b>Why</b>${esc(c.why)}</p>`:''}${c.note?`<p class="note"><b>Wording note</b>${esc(c.note)}</p>`:''}${c.ref?`<p class="ref"><b>Cert Guide</b>${refTxt(c.ref)}</p>`:''}</div>`:''}
+  </div>
+  <div class="btnrow">${shown?`<button type="button" class="go" id="tN">${r.i+1<r.qs.length?'Next question':'See results'}</button>`
+    :`<button type="button" class="go" id="tS" ${ready?'':'disabled'}>${r.fb==='exam'?(r.i+1<r.qs.length?'Submit and next':'Submit and finish'):'Check answer'}</button>`}</div>
+  <div class="nav"><button type="button" id="tQuit">End test now</button><span>${c.mc.order?'':`Keys 1–${x.o.length} pick · Enter submits`}</span></div>`;
+  v.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(x.res!==null)return;const k=+b.dataset.k;
+    if(c.mc.order){const p=x.sel.indexOf(k);if(p>=0)x.sel=x.sel.slice(0,p);else x.sel.push(k)}
+    else if(multi){x.sel=x.sel.includes(k)?x.sel.filter(y=>y!==k):(x.sel.length<need?[...x.sel,k]:x.sel)}
+    else x.sel=[k];
+    tSave();tQuestion(v)});
+  if($('tS'))$('tS').onclick=tSubmit;
+  if($('tN'))$('tN').onclick=tNext;
+  let qa=false;
+  $('tQuit').onclick=()=>{if(!qa){qa=true;$('tQuit').textContent=r.mock?'Tap again: unanswered count as wrong':'Tap again to end and mark';$('tQuit').style.color='var(--red)';return}tEnd()};
+  if(r.mock){const tick=()=>{const left=r.deadline-Date.now();if(left<=0){tEnd();return}const el=$('tClock');if(el){el.textContent=fmtT(left);el.style.color=left<5*60000?'var(--red)':''}};
+    if(r.deadline-Date.now()<=0)return tEnd();tTick=setInterval(tick,1000);tick()}
+}
+
+function tResults(v){
+  const r=T.cur,qs=r.qs,ok=qs.filter(x=>x.res).length,pct=qs.length?Math.round(ok/qs.length*100):0;
+  const by={};qs.forEach(x=>{const s=BYID[x.id].sec;by[s]=by[s]||{n:0,c:0};by[s].n++;if(x.res)by[s].c++});
+  const secs=r.mock?DOMS.filter(d=>by[d]):Object.keys(by).sort((a,b)=>by[a].c/by[a].n-by[b].c/by[b].n);
+  const lastM=r.mock?T.mocks[T.mocks.length-1]:null;
+  const missed=qs.filter(x=>!x.res);
+  v.innerHTML=`
+  <div class="tpanel" style="align-items:flex-start">
+    <span class="label">${r.mock?'Mock exam result':'Result'}</span>
+    <p class="score">${pct}%</p>
+    <p class="tsub">${ok} of ${qs.length} right${lastM?' in '+fmtT(lastM.used):''}${pct>=80?' · solid work':pct>=60?' · getting there':' · keep drilling the weak sections'}</p>
+    <div class="btnrow" style="width:100%">${missed.length?`<button type="button" class="go" id="tRetry">Retry missed (${missed.length})</button>`:''}<button type="button" class="go alt" id="tNew">${r.mock?'Back to tests':'New test'}</button></div>
+  </div>
+  <div class="tpanel"><h2>${r.mock?'By exam area':'By section'}</h2><div class="weak">${secs.map(s=>{const p=Math.round(by[s].c/by[s].n*100),lo=p<60;
+    return `<div class="wrow" style="cursor:default"><span class="nm">${esc(SHORT[s]||s)}</span><span class="pc${lo?' lo':''}">${p}%</span><span class="wb"><i class="${lo?'lo':''}" style="width:${p}%"></i></span><span class="dt">${by[s].c} of ${by[s].n} right</span></div>`}).join('')}</div></div>
+  ${missed.length?`<div class="tpanel"><h2>Missed questions</h2><div>${missed.map(x=>{const c=BYID[x.id];
+    const yours=c.mc.order?x.sel.map(k=>c.a[k].replace(/^\d+\.\s*/,'')).join(' → '):x.sel.map(k=>c.mc.o[k]).join(' / ');
+    const right=c.mc.order?c.a:c.mc.c.map(k=>c.mc.o[k]);
+    return `<div class="miss"><p class="mq">${esc(c.q)}</p><p class="yp">You picked: ${esc(yours||'nothing')}</p><ul>${right.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>${c.why?`<p class="why"><b>Why</b>${esc(c.why)}</p>`:''}<p class="ref">${esc(SHORT[c.sec]||c.sec)} · ${c.mock?'Mock Q':'Q'}${c.num}</p></div>`}).join('')}</div></div>`:''}`;
+  if($('tRetry'))$('tRetry').onclick=()=>{T.showRes=false;tStart(shuf(missed.map(x=>x.id)),r.mock?'instant':r.fb)};
+  $('tNew').onclick=()=>{T.showRes=false;tSave();tRender();goTo(0)};
+}
+
+document.addEventListener('keydown',e=>{
+  if(S.view!=='test'||!T.cur||T.cur.done)return;
+  if(e.target.closest&&e.target.closest('input'))return;
+  const n=parseInt(e.key,10);
+  if(n>=1&&n<=9){const b=$('testView').querySelectorAll('.opt')[n-1];if(b&&!b.disabled){e.preventDefault();b.click()}}
+  else if(e.key==='Enter'){const b=$('tS')||$('tN');if(b&&!b.disabled){e.preventDefault();b.click()}}
+});
+
+// ----- cheat sheet tab -----
+const CHEAT=__CHEAT__;
+let cExpand=false;
+function cList(t,q){const p=t.replace(/\.$/,'').split(/;\s*/);return p.length>=3?`<ul class="clist">${p.map(x=>`<li>${hl(x,q)}</li>`).join('')}</ul>`:hl(t,q)}
+function renderCheat(){
+  const v=$('cheatView'),q=($('cq')?$('cq').value.trim():''),ql=q.toLowerCase();
+  if(!$('cq')){
+    v.innerHTML=`<input class="search" id="cq" type="search" placeholder="Filter terms and definitions" autocomplete="off">
+    <div class="secnav"><p class="tsub" style="flex:1 1 200px">Key terms, design trade-offs and exam tips from the course's ENSLD 300-420 cheat sheet. Tap a topic to open it.</p><button type="button" class="tool" id="cExp">Expand all</button></div>
+    <div id="cBody" style="display:flex;flex-direction:column;gap:10px"></div>`;
+    $('cq').oninput=renderCheat;
+    $('cExp').onclick=()=>{cExpand=!cExpand;v.querySelectorAll('#cBody details').forEach(d=>d.open=cExpand);$('cExp').textContent=cExpand?'Collapse all':'Expand all'};
+  }
+  const hit=t=>!ql||t.toLowerCase().includes(ql);
+  let shown=0;
+  const html=CHEAT.map(s=>{
+    let inner='',count='';
+    if(s.rows.length){const rows=s.rows.filter(r=>hit(r[0]+' '+r[1])||hit(s.title));if(ql&&!rows.length&&!hit(s.tip))return'';
+      inner=`<dl class="terms">${rows.map(r=>`<div><dt>${hl(r[0],q)}</dt><dd>${cList(r[1],q)}</dd></div>`).join('')}</dl>`+(s.tip?`<p class="ctip"><b>Exam tip</b>${hl(s.tip,q)}</p>`:'');
+      count=`${rows.length} ${s.n===16?'comparisons':'terms'}`}
+    else if(s.qs.length){if(ql&&!s.qs.some(x=>hit(x.q+' '+x.o.join(' ')+' '+x.why)))return'';
+      inner=s.qs.map((x,i)=>`<div class="cq" data-i="${i}"><p class="mq">${i+1}. ${hl(x.q,q)}</p><div class="opts">${x.o.map((o,k)=>`<button type="button" class="opt radio" data-k="${k}"><span class="bx"></span><span>${esc(o)}</span></button>`).join('')}</div><p class="why" hidden><b>Why</b>${esc(x.why)}</p></div>`).join('');
+      count=`${s.qs.length} questions`}
+    else if(s.pri.length){const ps=s.pri.filter(p=>hit(p[0]+' '+p[1]));if(ql&&!ps.length)return'';
+      inner=`<dl class="terms">${ps.map(p=>`<div><dt>${hl(p[0],q)}</dt><dd>${hl(p[1],q)}</dd></div>`).join('')}</dl>${s.foot?`<p class="tsub">${esc(s.foot)}</p>`:''}`;count=`${ps.length} areas`}
+    shown++;
+    return `<details class="fold cfold"${(ql||cExpand)?' open':''}><summary><span class="cn">${String(s.n).padStart(2,'0')}</span>${esc(s.title)}<span class="cc">${count.replace(/^1 (\w+)s$/,'1 $1')}</span></summary>${inner}</details>`}).join('');
+  $('cBody').innerHTML=shown?html:`<p class="empty">Nothing matches "${esc(q)}".</p>`;
+  $('cBody').querySelectorAll('.cq').forEach(box=>{const s=CHEAT.find(c=>c.qs.length),x=s.qs[+box.dataset.i];
+    box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{box.querySelectorAll('.opt').forEach(o=>{o.disabled=true;const k=+o.dataset.k;if(k===x.a){o.classList.add('ok');o.querySelector('.bx').textContent='✓'}else if(o===b)o.classList.add('bad')});box.querySelector('.why').hidden=false})});
+}
+
+// ----- stars, spaced repetition helpers, backup, summary -----
+function cid(secName,i,q){return secName+'#'+(i+1)+'#'+q.slice(0,40)}
+function starBtn(id){const on=!!S.stars[id];return `<button type="button" class="star" data-star="${esc(id)}" aria-pressed="${on}" aria-label="${on?'Remove bookmark':'Bookmark this question'}" title="Bookmark">${on?'★':'☆'}</button>`}
+function starCount(){return CARDS.filter(c=>S.stars[c.id]).length}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.star');if(!b)return;
+  e.preventDefault();e.stopPropagation();const id=b.dataset.star;
+  if(S.stars[id])delete S.stars[id];else S.stars[id]=1;save();
+  document.querySelectorAll('.star').forEach(x=>{if(x.dataset.star===id){const on=!!S.stars[id];x.setAttribute('aria-pressed',on);x.textContent=on?'★':'☆'}});
+  if(S.view==='cards')tally();},true);
+function srDue(c){const r=S.sr[c.id];if(!r)return S.marks[c.id]?true:false;return r.due<=Date.now()}
+function srNext(c){const r=S.sr[c.id];if(!r||r.due<=Date.now())return '';const d=Math.ceil((r.due-Date.now())/DAY);return d<=1?'due tomorrow':`next in ${d} days`}
+function srGrade(c,g){const r=S.sr[c.id]||{b:0};
+  if(g==='k'){r.b=Math.min((r.b||0)+1,SRINT.length-1);const t=new Date();t.setHours(4,0,0,0);r.due=t.getTime()+SRINT[r.b]*DAY}
+  else{r.b=0;r.due=Date.now()}
+  S.sr[c.id]=r}
+
+// backup / restore
+function backup(){
+  const data={app:'ensld-study',v:1,at:new Date().toISOString(),flash:S,test:T};
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='ensld-progress-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+  $('bkMsg').textContent='Saved a backup file. Keep it somewhere you can reach from your other device.';
+}
+function restore(file){
+  const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.app!=='ensld-study'||!d.flash)throw 0;
+    localStorage.setItem(KEY,JSON.stringify(d.flash));localStorage.setItem(TKEY,JSON.stringify(d.test||{}));
+    $('bkMsg').textContent='Progress restored. Reloading…';setTimeout(()=>location.reload(),600)}
+    catch(e){$('bkMsg').textContent="That file isn't a progress backup from this course."}};rd.readAsText(file)}
+$('bkSave').onclick=backup;$('bkLoad').onclick=()=>$('bkFile').click();$('bkFile').onchange=e=>{if(e.target.files[0])restore(e.target.files[0]);e.target.value=''};
+
+// test-day summary
+function tSummary(v){
+  const W=weakList().filter(w=>w.seen).slice(0,5);
+  const rep=POOL.filter(c=>{const h=T.hist[c.id];return h&&h.n-h.c>=2}).sort((a,b)=>(T.hist[b.id].n-T.hist[b.id].c)-(T.hist[a.id].n-T.hist[a.id].c));
+  const M=T.mocks,stars=CARDS.filter(c=>S.stars[c.id]);
+  const due=CARDS.filter(c=>srDue(c)).length;
+  v.innerHTML=`
+  <div class="secnav"><button type="button" class="tool" id="sBack">← Back to tests</button></div>
+  <div class="tpanel"><h2>Test-day summary</h2><p class="tsub">One page for the final review: where you're weakest, what you keep missing, and how your mock exams are trending.</p>
+    <p class="tsub" style="color:var(--ink)">${CARDS.length} questions · ${Object.keys(T.hist).length} tested · ${due} flash card${due===1?'':'s'} due · ${stars.length} bookmarked</p></div>
+  <div class="tpanel"><h2>Weakest sections</h2>${W.length?`<div class="weak">${W.map(w=>{const lo=w.pct<60;return `<button type="button" class="wrow" data-sec="${esc(w.name)}"><span class="nm">${esc(SHORT[w.name]||w.name)}</span><span class="pc${lo?' lo':''}">${w.pct}%</span><span class="wb"><i class="${lo?'lo':''}" style="width:${w.pct}%"></i></span><span class="dt">${w.ok} of ${w.total} known · tap to test</span></button>`}).join('')}</div>`:'<p class="tsub">Nothing started yet. Do some flash cards or a practice test first.</p>'}</div>
+  <div class="tpanel"><h2>Mock exam trend</h2>${M.length?`<div class="trend">${M.slice(-12).map(m=>{const p=Math.round(m.ok/m.n*100);return `<i class="${p<60?'lo':''}" style="height:${Math.max(p,3)}%"><span>${p}</span></i>`}).join('')}</div><p class="tsub">Last ${Math.min(M.length,12)} attempts, oldest on the left. Best ${Math.max(...M.map(m=>Math.round(m.ok/m.n*100)))}%.</p>`:'<p class="tsub">No mock exam attempts yet.</p>'}</div>
+  <div class="tpanel"><h2>Missed twice or more</h2>${rep.length?`<div class="btnrow"><button type="button" class="go" id="sRep">Test these ${rep.length}</button></div><div>${rep.slice(0,40).map(c=>`<div class="sumq"><p class="mq">${esc(c.q)} ${starBtn(c.id)}</p><ul>${(c.mc.order?c.a:c.mc.c.map(k=>c.mc.o[k])).map(a=>`<li>${esc(a)}</li>`).join('')}</ul>${c.why?`<p class="why"><b>Why</b>${esc(c.why)}</p>`:''}<p class="ref">${esc(SHORT[c.sec]||c.sec)} · Q${c.num} · missed ${T.hist[c.id].n-T.hist[c.id].c} of ${T.hist[c.id].n}</p></div>`).join('')}</div>`:'<p class="tsub">No question missed twice yet.</p>'}</div>
+  <div class="tpanel"><h2>Bookmarked</h2>${stars.length?`<div class="btnrow"><button type="button" class="go alt" id="sStar">Test bookmarked (${stars.filter(c=>c.mc).length})</button></div>`:'<p class="tsub">Tap ☆ on any question to bookmark it.</p>'}</div>`;
+  $('sBack').onclick=()=>{T.view=null;tRender();goTo(0)};
+  v.querySelectorAll('.wrow').forEach(b=>b.onclick=()=>{T.view=null;tStart(tPickIds([b.dataset.sec],T.cfg.count),T.cfg.fb)});
+  if($('sRep'))$('sRep').onclick=()=>{T.view=null;tStart(shuf(rep.map(c=>c.id)),'instant')};
+  if($('sStar'))$('sStar').onclick=()=>{T.view=null;tStart(shuf(stars.filter(c=>c.mc).map(c=>c.id)),T.cfg.fb)};
+}
+
+// ----- lessons -----
+const LESSONS=__LESSONS__;
+S.gtab=S.gtab||{};S.lpart=S.lpart||{};S.lread=S.lread||{};
+function lessonTabs(name){if(!LESSONS[name])return'';const t=S.gtab[name]==='qs'?'qs':'lesson';
+  return `<div class="ltabs"><button type="button" class="ltab" data-t="lesson" aria-pressed="${t==='lesson'}">Lesson</button><button type="button" class="ltab" data-t="qs" aria-pressed="${t==='qs'}">Questions (${DATA[SECBY[name]].qs.length})</button></div>`}
+function lBlock(b,s){
+  if(b.p)return `<p class="lp">${esc(b.p)}</p>`;
+  if(b.ul)return `<ul class="lu">${b.ul.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+  if(b.tbl)return `<div class="ltbl"><table><thead><tr>${b.tbl[0].map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${b.tbl.slice(1).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  if(b.dia)return `<div class="dia">${b.dia}</div>`;
+  if(b.tip)return `<p class="ctip"><b>Exam tip</b>${esc(b.tip)}</p>`;
+  if(b.check)return `<div class="lcheck"><span class="label">Check yourself</span>${b.check.map(i=>{const c=s.qs[i];if(!c)return'';
+    return `<details class="gq"><summary><h3><span class="n">Q${i+1}</span><span>${esc(c.card||c.q)}${c.dup?'':starBtn(cid(s.name,i,c.q))}</span></h3>${c.dia?`<div class="dia">${c.dia}</div>`:''}<span class="tapr">Show answer</span></summary>${qBody(c.ca?Object.assign({},c,{a:c.ca}):c,'')}</details>`}).join('')}</div>`;
+  return '';
+}
+function renderLesson(name){
+  const g=$('guide'),si=SECBY[name],s=DATA[si],L=LESSONS[name],n=L.parts.length;
+  let k=Math.min(S.lpart[name]||0,n-1);S.lread[name]=Math.max(S.lread[name]||0,k);save();
+  const part=L.parts[k],last=k===n-1;
+  g.innerHTML=`
+  <div class="secnav"><button type="button" class="tool" id="gBack">← All sections</button></div>
+  ${lessonTabs(name)}
+  <div class="gsec lsn">
+    <h2>${esc(s.name)}<small>Lesson · about ${L.mins} min</small></h2>
+    ${k===0?`<p class="tsub" style="font-size:.95rem">${esc(L.intro)}</p>`:''}
+    <details class="fold ltoc"><summary>Contents · part ${k+1} of ${n}</summary><ol>${L.parts.map((p,i)=>`<li class="${i<=(S.lread[name]||0)?'done':''}"><button type="button" data-p="${i}" class="${i===k?'cur':''}">${esc(p.h)}</button></li>`).join('')}<li><button type="button" data-p="ver">Checked against the Cert Guide</button></li></ol></details>
+    <div class="lprog"><i style="width:${(k+1)/n*100}%"></i></div>
+    <span class="lmeta">PART ${k+1} OF ${n}</span>
+    <h3 class="lh">${esc(part.h)}</h3>
+    ${part.b.map(b=>lBlock(b,s)).join('')}
+    ${last&&L.verified?`<details class="fold lver" id="lver"><summary>Checked against the Cert Guide</summary>
+      <p class="tsub">Each point below was checked against the ENSLD 300-420 Official Cert Guide (PDF page numbers).</p>
+      <ul>${L.verified.map(v=>`<li>${esc(v[0])} <span class="pg">${esc(v[1])}</span></li>`).join('')}</ul>
+      ${L.course&&L.course.length?`<p class="tsub" style="margin-top:6px">Not covered in the Cert Guide. These come from the course material and its practice questions:</p><ul>${L.course.map(v=>`<li>${esc(v)}</li>`).join('')}</ul>`:''}</details>`:''}
+  </div>
+  <div class="secnav">${k>0?`<button type="button" class="tool" id="lPrev">← ${esc(L.parts[k-1].h)}</button>`:'<span></span>'}
+    ${last?`<button type="button" class="go" id="lDone" style="flex:0 1 auto">Go to the questions →</button>`:`<button type="button" class="go" id="lNext" style="flex:0 1 auto">Next: ${esc(L.parts[k+1].h)} →</button>`}</div>`;
+  $('gBack').onclick=()=>{S.gsec=null;save();renderGuide();goTo(0)};
+  const go=i=>{S.lpart[name]=i;save();renderLesson(name);goTo(0)};
+  if($('lPrev'))$('lPrev').onclick=()=>go(k-1);
+  if($('lNext'))$('lNext').onclick=()=>go(k+1);
+  if($('lDone'))$('lDone').onclick=()=>{S.gtab[name]='qs';save();renderGuide();goTo(0)};
+  g.querySelectorAll('.ltoc button').forEach(b=>b.onclick=()=>{if(b.dataset.p==='ver'){go(n-1);setTimeout(()=>{const v=$('lver');if(v){v.open=true;jumpTo('lver')}},50)}else go(+b.dataset.p)});
+  g.querySelectorAll('.ltab').forEach(b=>b.onclick=()=>{S.gtab[name]=b.dataset.t;save();renderGuide();goTo(0)});
+}
+
+renderGuide();setView(S.view);
+</script>
+<script>if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script></body></html>
