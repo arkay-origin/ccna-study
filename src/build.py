@@ -1,12 +1,15 @@
 import json, re, importlib, sys, os
 sys.path.insert(0, os.path.dirname(__file__))
-MODS = ['c1_foundations', 'c2_addressing', 'c3_switching', 'c4_routing', 'c5_security', 'c6_ops']
+MODS = ['c1_foundations', 'c2_addressing', 'c3_switching', 'c4_routing', 'c5_security', 'c6_ops', 'c8_v11_extras']
 secs = []
 for m in MODS:
     try: secs += importlib.import_module(m).S
     except ModuleNotFoundError as e:
         if e.name == m: print('skip', m); continue
         raise
+
+import c7_additions
+secs = c7_additions.apply(secs)
 
 # validate
 errs = []
@@ -75,5 +78,22 @@ sub('Checked against the Cert Guide', 'Exam topics covered', 2)
 sub('<p class="tsub">Each point below was checked against the ENSLD 300-420 Official Cert Guide (PDF page numbers).</p>',
     '<p class="tsub">This lesson maps to these Cisco CCNA 200-301 v2.0 exam topics. Check Cisco\'s published topic list before you book the exam.</p>')
 sub('</style><style>body{margin:0}', '.q,.gq h3 span,.mq,.lu li,.ltbl td,.hit span{white-space:pre-wrap}.ltbl td,.gq h3 span,.ans li,.q,.mq,.lp,.lu li,.why,.opt,.hit span{overflow-wrap:anywhere;min-width:0}</style><style>body{margin:0}')
+# ---- lesson blocks: code and note ----
+sub("  if(b.tip)return `<p class=\"ctip\"><b>Exam tip</b>${esc(b.tip)}</p>`;",
+    "  if(b.tip)return `<p class=\"ctip\"><b>Exam tip</b>${esc(b.tip)}</p>`;\n  if(b.code)return `<pre class=\"lcode\">${esc(b.code)}</pre>`;\n  if(b.note)return `<p class=\"ctip\"><b>${esc(b.nl||'Note')}</b>${esc(b.note)}</p>`;")
+sub('Not covered in the Cert Guide. These come from the course material and its practice questions:',
+    'Matching sections in your Flackbox CCNA notes (Google Drive › IT › CCNA › Study Notes):')
+sub('<p class="tsub">This lesson maps to these Cisco CCNA 200-301 v2.0 exam topics. Check Cisco\'s published topic list before you book the exam.</p>',
+    '<p class="tsub">This lesson maps to these Cisco CCNA 200-301 exam topics (v2.0 unless marked v1.1). Check Cisco\'s published topic list before you book the exam.</p>')
+# ---- subnetting drill view ----
+sub('<button type="button" id="v-cheat" data-v="cheat">Cheat sheet</button>',
+    '<button type="button" id="v-cheat" data-v="cheat">Cheat sheet</button>\n      <button type="button" id="v-drill" data-v="drill">Subnetting</button>')
+sub('<section id="cardsView" class="wrap" hidden>', '<section id="drillView" class="wrap" hidden style="gap:12px"></section>\n\n  <section id="cardsView" class="wrap" hidden>')
+sub("$('cheatView').hidden=v!=='cheat';", "$('cheatView').hidden=v!=='cheat';$('drillView').hidden=v!=='drill';")
+sub("['guide','cards','test','cheat'].forEach(x=>$('v-'+x).setAttribute('aria-pressed',v===x));if(v==='test')tRender();",
+    "['guide','cards','test','cheat','drill'].forEach(x=>$('v-'+x).setAttribute('aria-pressed',v===x));if(v==='test')tRender();if(v==='drill')renderDrill();")
+sub("$('v-cheat').onclick=()=>setView('cheat');", "$('v-cheat').onclick=()=>setView('cheat');$('v-drill').onclick=()=>setView('drill');")
+sub('// ----- lessons -----', open(os.path.join(os.path.dirname(__file__), 'drill.js')).read() + '\n// ----- lessons -----')
+sub('</style><style>body{margin:0}', '.lcode{font:500 .8rem/1.5 var(--mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-left:3px solid var(--tan);border-radius:3px;padding:10px 12px;margin:0;overflow-x:auto;white-space:pre}.dform{display:flex;flex-direction:column;gap:10px}.dfl{display:flex;flex-direction:column;gap:4px}.dinp{font-family:var(--mono);box-sizing:border-box}.dinp.ok,.dinp.bad{border-width:2px}#drillView .seg{flex-wrap:wrap}.views{grid-template-columns:repeat(5,auto)}@media (max-width:560px){.views{grid-template-columns:1fr 1fr}.views button:nth-child(5){grid-column:1/-1;border-left:0}}</style><style>body{margin:0}')
 open(os.path.join(os.path.dirname(__file__), '..', 'index.html'), 'w').write(h)
 print('sections', len(DATA), 'questions', sum(len(s['qs']) for s in DATA), 'exam', len(EXAM), 'cheat', len(CHEAT), 'bytes', len(h))

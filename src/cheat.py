@@ -1,4 +1,11 @@
 _T = [
+ ('IOS basics and device management', [
+   ['Modes', 'R1> user · R1# privileged (enable) · (config)# global (conf t) · (config-if)#'], ['Move', 'exit = back one level · end / Ctrl-Z = to privileged · Ctrl-Shift-6 = stop'],
+   ['Filter output', 'show run | include · | begin · | exclude · | section'], ['Memory', 'ROM: POST, bootstrap, ROMMON · flash: IOS · NVRAM: startup-config · RAM: running-config'],
+   ['Boot', 'POST → bootstrap → IOS from flash (none → ROMMON) → startup-config (none → setup)'], ['Save / reset', 'copy run start · write erase + reload'],
+   ['Config register', '0x2102 normal · 0x2142 ignore startup-config · 0x2120 ROMMON'], ['Switch management', 'IP on an SVI + ip default-gateway'],
+   ['Passwords', 'enable secret beats enable password · service password-encryption = weak type 7'], ['Privilege', 'Levels 0–15; users default 1; 15 = full'],
+   ['Troubleshooting', 'Bottom-up · top-down · divide and conquer · follow the path · compare · swap']], 'Copying a file into running-config merges; it does not replace.'),
  ('Subnetting quick table', [
    ['/24 · 255.255.255.0', '256 addresses, 254 hosts'], ['/25 · .128', 'Block 128, 126 hosts'], ['/26 · .192', 'Block 64, 62 hosts'], ['/27 · .224', 'Block 32, 30 hosts'],
    ['/28 · .240', 'Block 16, 14 hosts'], ['/29 · .248', 'Block 8, 6 hosts'], ['/30 · .252', 'Block 4, 2 hosts (point-to-point)'], ['/31', '2 addresses, both usable on point-to-point links'],
@@ -88,6 +95,13 @@ _T = [
    ['SNMP', 'Get/Set UDP 161 · trap/inform UDP 162 · MIB, OIDs'], ['v2c / v3', 'Community strings / authPriv with users'],
    ['Severities', '0 Emerg · 1 Alert · 2 Crit · 3 Err · 4 Warn · 5 Notif · 6 Info · 7 Debug'], ['Format', '%FACILITY-SEVERITY-MNEMONIC: text'],
    ['logging trap 4', 'Sends levels 0–4'], ['Server facility', 'local7 by default'], ['SSH sessions', 'terminal monitor']], 'Every Awesome Cisco Engineer Will Need Ice-cream Daily.'),
+ ('v1.1 extras (not on v2.0)', [
+   ['Campus', 'Access · distribution · core; collapsed core = 2-tier; spine-leaf in data centres'], ['WAN', 'Leased line · MPLS · internet VPN · Metro Ethernet · PPPoE; hub-and-spoke vs mesh'],
+   ['Cloud', 'IaaS · PaaS · SaaS; public · private · hybrid · community'], ['Security terms', 'Threat · vulnerability · exploit · mitigation; program: awareness, training, physical access'],
+   ['QoS', 'DSCP 6 bits (voice EF 46) · CoS 3 bits · LLQ for voice · policing drops, shaping buffers'], ['NTP', 'UDP 123 · stratum 1 = reference clock · ntp server / ntp master'],
+   ['TFTP / FTP', 'UDP 69, no login / TCP 20-21, clear-text login'], ['AP modes', 'Local · FlexConnect · monitor · sniffer · rogue detector · SE-Connect · bridge'],
+   ['WLC QoS', 'Platinum voice · Gold video · Silver best effort · Bronze background'], ['REST', 'POST create · GET read · PUT/PATCH update · DELETE · 200/201/400/401/403/404/500'],
+   ['JSON', '{ } object · [ ] array · "string" · number · true/false · null'], ['SD-WAN', 'vManage · vBond · vSmart · edge routers']], 'Only needed if you sit v1.1 before February 3, 2027.'),
  ('Automation and AI', [
    ['Approaches', 'Device · cloud · controller · automation · IaC'], ['Northbound / southbound', 'REST APIs to apps / NETCONF, CLI, SNMP to devices'],
    ['Ansible', 'Agentless, SSH, push, YAML playbooks, inventory, idempotent'], ['Modules', 'cisco.ios.ios_command (show) · ios_config (config)'], ['Run', 'ansible-playbook site.yml -i inventory'],

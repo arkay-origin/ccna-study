@@ -78,3 +78,6 @@ def cloud(x, y, rx, ry, label=None):
 
 def num(x, y, n):
     return f'<circle class="d-rt" cx="{x}" cy="{y}" r="8"/>' + txt(x, y + 3.5, n, 'd-s')
+
+CODE = lambda *lines: {'code': '\n'.join(lines)}
+NOTE = lambda label, t: {'note': t, 'nl': label}
